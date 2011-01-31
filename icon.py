@@ -332,6 +332,7 @@ class Icon(gtk.Image):
         # See #1175
         self._file = None
         self._alpha = 1.0
+        self._scale = 1.0
 
         gobject.GObject.__init__(self, **kwargs)
 
@@ -420,7 +421,18 @@ class Icon(gtk.Image):
             (allocation.height - requisition[1]) * yalign)
 
         cr = self.window.cairo_create()
+
+        if self._scale != 1.0:
+            cr.scale(self._scale, self._scale)
+
+            margin = self._icon_size * (1 - self._scale) / 2
+            x, y = x + margin, y + margin
+
+            x = x / self._scale
+            y = y / self._scale
+
         cr.set_source_surface(surface, x, y)
+
         if self._alpha == 1.0:
             cr.paint()
         else:
@@ -530,6 +542,11 @@ class Icon(gtk.Image):
     def set_alpha(self, alpha):
         if self._alpha != alpha:
             self._alpha = alpha
+            self.queue_draw()
+
+    def set_scale(self, scale):
+        if self._scale != scale:
+            self._scale = scale
             self.queue_draw()
 
 

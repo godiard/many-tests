@@ -24,18 +24,36 @@ from icon import Icon, CanvasIcon
 _INTERVAL = 100
 _STEP = math.pi / 10  # must be a fraction of pi, for clean caching
 
+
 class Pulser(object):
     def __init__(self, icon):
         self._pulse_hid = None
         self._icon = icon
         self._level = 0
         self._phase = 0
+        self._start_scale = 1.0
+        self._end_scale = 1.0
+        self._zoom_steps = 1
+        self._zoom_step = 1
+        self._scale = 1.0
+
+    def set_zoom(self, start_scale, end_scale, zoom_steps):
+        self._start_scale = start_scale
+        self._end_scale = end_scale
+        self._zoom_steps = zoom_steps
+        self._scale_step = abs(self._start_scale - self._end_scale) / \
+                self._zoom_steps
+        self._scale = self._start_scale
+        self._icon.set_scale(self._scale)
 
     def start(self, restart=False):
         if restart:
             self._phase = 0
         if self._pulse_hid is None:
             self._pulse_hid = gobject.timeout_add(_INTERVAL, self.__pulse_cb)
+        if self._start_scale != self._end_scale:
+            self._scale = self._start_scale + self._scale_step * \
+                    self._zoom_step
 
     def stop(self):
         if self._pulse_hid is not None:
@@ -45,18 +63,25 @@ class Pulser(object):
 
     def update(self):
         if self._icon.get_pulsing():
-            print self._level
             self._icon.set_alpha(self._level)
         else:
             self._icon.xo_color = self._icon.base_color
+        self._icon.set_scale(self._scale)
 
     def __pulse_cb(self):
         self._phase += _STEP
         self._level = 0.2 + 0.8 * (math.sin(self._phase) + 1) / 2
-        
+        #print "pulse_cb ", self._start_scale, self._end_scale
+        if self._zoom_step <= self._zoom_steps:
+            if self._start_scale != self._end_scale:
+                self._scale = self._start_scale + self._scale_step * \
+                        self._zoom_step
+                self._zoom_step += 1
+
         self.update()
 
         return True
+
 
 class PulsingIcon(Icon):
     __gtype_name__ = 'SugarPulsingIcon'
@@ -68,12 +93,10 @@ class PulsingIcon(Icon):
         self._paused = False
         self._pulsing = False
 
-        self._zoom_steps = 0
         self._start_size = 100
         self._end_size = 100
-        self._start_scale = 1
-        self._end_scale = 1       
-        
+        self._zoom_steps = 1
+        self._icon_size = max(self._start_size, self._end_size)
 
         Icon.__init__(self, **kwargs)
 
@@ -100,26 +123,21 @@ class PulsingIcon(Icon):
     def get_base_color(self):
         return self._base_color
 
-    def set_zoom_steps(self, zoom_steps):
-        self._zoom_steps = zoom_steps
-
-    def set_start_size(self, start_size):
+    def set_zoom(self, start_size, end_size, zoom_steps):
         self._start_size = start_size
-        self._recalc_scales()
-
-    def set_end_size(self, end_size):
         self._end_size = end_size
+        self._zoom_steps = zoom_steps
         self._recalc_scales()
 
     def _recalc_scales(self):
         if self._start_size > self._end_size:
-            self._start_scale = 1
-            self._end_scale = self._end_size / self._start_size 
+            start_scale = 1.0
+            end_scale = float(self._end_size) / float(self._start_size)
 
         if self._end_size > self._start_size:
-            self._start_scale = self._start_size / self._end_size
-            self._end_scale = 1
-
+            start_scale = float(self._start_size) / float(self._end_size)
+            end_scale = 1.0
+        self._pulser.set_zoom(start_scale, end_scale, self._zoom_steps)
 
     base_color = gobject.property(
         type=object, getter=get_base_color, setter=set_base_color)
@@ -166,6 +184,7 @@ class PulsingIcon(Icon):
         self._pulser.stop()
         if self._palette is not None:
             self._palette.destroy()
+
 
 class CanvasPulsingIcon(CanvasIcon):
     __gtype_name__ = 'SugarCanvasPulsingIcon'
