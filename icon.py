@@ -61,7 +61,8 @@ class _SVGLoader(object):
                 logging.error(
                     'Icon %s, entity %s is invalid.', file_name, entity)
 
-        import rsvg # XXX this is very slow!  why?
+        # XXX this is very slow!  why?
+        import rsvg
         return rsvg.Handle(data=icon)
 
 
@@ -246,7 +247,7 @@ class _IconBuffer(object):
         #   -- 2007-12-14 Benjamin Berg
         pixbuf = widget.style.render_icon(icon_source, widget.get_direction(),
                                           gtk.STATE_INSENSITIVE, -1, widget,
-                                          "sugar-icon")
+                                          'sugar-icon')
 
         return pixbuf
 
