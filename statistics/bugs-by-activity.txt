@@ -1,0 +1,89 @@
+[gonzalo@aronax statistics]$ ./report-bugs.sh | sort -n -r
+158 browse 47 111
+60 read 17 43
+52 tamtam 11 41
+50 record 28 22
+34 turtleart 24 10
+28 terminal 12 16
+25 pippy 10 15
+25 measure 12 13
+25 calculate 18 7
+22 physics 10 12
+21 memorize 12 9
+20 etoys 4 16
+19 help 4 15
+16 write 15 1
+13 colors 9 4
+13 chat 11 2
+12 scratch 3 9
+10 wikipedia - 10
+10 clock 9 1
+9 jukebox 7 2
+8 distance - 8
+7 words 7 -
+7 labyrinth 7 -
+5 moon 5 -
+5 log 5 -
+4 typing-turtle 4 -
+4 speak 3 1
+4 paint 3 1
+3 imageviewer 1 2
+2 watchme 2 -
+2 stopwatch - 2
+1 maze 1 -
+1 infoslicer 1 -
+1 abacus 1 -
+0 ruler - -
+0 implode - -
+0 hello-world - -
+0 get-books - -
+0 fototoon - -
+0 finance - -
+
+
+[gonzalo@aronax statistics]$ ./count-cant-comits-last-year.sh | sort -r -n
+713 turtleart
+87 abacus
+70 paint
+46 physics
+44 pippy
+42 get-books
+41 speak
+32 record
+30 fototoon
+28 read
+28 maze
+25 calculate
+23 browse
+16 write
+12 chat
+9 imageviewer
+8 labyrinth
+7 jukebox
+7 help
+4 memorize
+3 typing-turtle
+2 ruler
+2 implode
+1 moon
+1 log
+1 infoslicer
+1 colors
+1 clock
+0 terminal
+0 finance
+0 etoys
+
+[gonzalo@aronax statistics]$ ./create-commit-bugs-data.sh
+cat: commits_last_year.txt: No existe el fichero o el directorio
+cat: commits_last_year.txt: No existe el fichero o el directorio
+cat: commits_last_year.txt: No existe el fichero o el directorio
+cat: commits_last_year.txt: No existe el fichero o el directorio
+cat: commits_last_year.txt: No existe el fichero o el directorio
+cat: commits_last_year.txt: No existe el fichero o el directorio
+cat: commits_last_year.txt: No existe el fichero o el directorio
+cat: commits_last_year.txt: No existe el fichero o el directorio
+cat: commits_last_year.txt: No existe el fichero o el directorio
+cat: commits_last_year.txt: No existe el fichero o el directorio
+
+

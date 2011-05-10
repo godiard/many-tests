@@ -1,0 +1,11 @@
+set term png size 800, 600
+set output "commit-bugs-linear.png"
+#set logscale x
+#set logscale y
+set xlabel "Bugs"
+set ylabel "Commits from last year"
+set title ""
+#set term pdfcairo font "sans,12"
+
+plot "commit-bugs.dat" with labels
+

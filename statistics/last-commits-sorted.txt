@@ -1,0 +1,34 @@
+speak Date: May 2 2011 Author: Rafael Ortiz <rafael@activitycentral.com>
+maze Date: Apr 29 2011 Author: Rafael Ortiz <rafael@activitycentral.com>
+get-books Date: Apr 28 2011 Author: Gonzalo Odiard <godiard@gmail.com>
+record Date: Apr 25 2011 Author: Daniel Drake <dsd@laptop.org>
+pippy Date: Apr 25 2011 Author: Rafael Ortiz <rafael@activitycentral.com>
+turtleart Date: Apr 24 2011 Author: Walter Bender <walter.bender@gmail.com>
+typing-turtle Date: Apr 11 2011 Author: Gonzalo Odiard <godiard@sugarlabs.org>
+colors Date: Apr 11 2011 Author: Gonzalo Odiard <godiard@sugarlabs.org>
+paint Date: Apr 8 2011 Author: Gonzalo Odiard <godiard@sugarlabs.org>
+read Date: Mar 29 2011 Author: James Cameron <quozl@laptop.org>
+fototoon Date: Mar 24 2011 Author: Gonzalo Odiard <godiard@sugarlabs.org>
+jukebox Date: Mar 14 2011 Author: Rafael Ortiz <rafael@activitycentral.com>
+calculate Date: Mar 1 2011 Author: Gary Martin <gary@garycmartin.com>
+labyrinth Date: Feb 22 2011 Author: Jorge Saldivar <jsaldivar@paraguayeduca.org>
+write Date: Feb 14 2011 Author: Gonzalo Odiard <godiard@sugarlabs.org>
+chat Date: Jan 23 2011 Author: Aleksey Lim <alsroot@member.fsf.org>
+memorize Date: Jan 5 2011 Author: Simon Schampijer <simon@schampijer.de>
+implode Date: Jan 1 2011 Author: Joe Lee <joe@jotaro.com>
+imageviewer Date: Jan 22 2011 Author: Aleksey Lim <alsroot@member.fsf.org>
+infoslicer Date: Dec 31 2010 Author: Aleksey Lim <alsroot@member.fsf.org>
+physics Date: Dec 31 2010 Author: Gary Martin <gary@garycmartin.com>
+browse Date: Nov 18 2010 Author: Gonzalo Odiard <godiard@sugarlabs.org>
+help Date: Nov 10 2010 Author: Bastien Guerry <bzg@altern.org>
+abacus Date: Oct 2 2010 Author: Walter Bender <walter@sugarlabs.org>
+log Date: Sep 30 2010 Author: Simon Schampijer <simon@schampijer.de>
+clock Date: Aug 28 2010 Author: Gary Martin <gary@garycmartin.com>
+moon Date: Aug 28 2010 Author: Gary Martin <gary@garycmartin.com>
+ruler Date: Jul 21 2010 Author: Walter Bender <walter@sugarlabs.org>
+terminal Date: Jan 16 2010 Author: Wade Brainerd <wadetb@gmail.com>
+finance Date: Nov 29 2009 Author: Wade Brainerd <wadetb@gmail.com>
+etoys Date: Mar 2 2009 Author: Bert Freudenberg <bert@freudenbergs.de>
+
+
+
