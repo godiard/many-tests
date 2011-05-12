@@ -21,7 +21,7 @@ maze|gitorious@git.sugarlabs.org:maze/mainline.git|Maze||
 memorize|gitorious@git.sugarlabs.org:memorize/mainline.git|Memorize|memorize|
 measure|git://dev.laptop.org/projects/measure|Measure|measure-activity|		
 moon|gitorious@git.sugarlabs.org:moon/mainline.git|Moon||
-paint|gitorious@git.sugarlabs.org:paint/mainline.git|Paint|paint/drawing-activity (oficina)|
+paint|gitorious@git.sugarlabs.org:paint/mainline.git|Paint|paint/drawing-activity+(oficina)|
 physics|gitorious@git.sugarlabs.org:physics/mainline.git|Physics|physics-activity|
 pippy|gitorious@git.sugarlabs.org:pippy/mainline.git|Pippy|pippy-activity|
 read|gitorious@git.sugarlabs.org:read/mainline.git|Read|read-activity|
@@ -37,4 +37,4 @@ typing-turtle|gitorious@git.sugarlabs.org:typing-turtle/mainline.git|TypingTurtl
 watchme|gitorious@git.sugarlabs.org:watchme/mainline.git|WatchMe||
 wikipedia|git://dev.laptop.org/projects/wikiserver||wikibrowse-activity|
 words|gitorious@git.sugarlabs.org:words/mainline.git|Words||
-write|gitorious@git.sugarlabs.org:write/mainline.git|Write|write-activity|
+write|gitorious@git.sugarlabs.org:write/mainline.git|Write|write-activity+(abiword)|
