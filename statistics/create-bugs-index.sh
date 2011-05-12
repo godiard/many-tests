@@ -3,25 +3,38 @@ INDEX_FILE="./bugs_index.html"
 echo "<html>" > $INDEX_FILE
 echo "<head>
 <style type="text/css">
-body
-{
+body {
 background-color:#d0e4fe;
 font-family:"Arial";
 font-size:10px;
 }
-th
-{
+
+p {
+font-size:14px;
+color:orange;
+}
+
+th {
 background-color:grey;
 color:orange;
 text-align:center;
 }
-td
-{
+
+td {
 background-color:white;
 }
 </style>
 </head>" > $INDEX_FILE
-echo "<body><table>" >> $INDEX_FILE
+echo "<body>" >> $INDEX_FILE
+
+for LINE in `cat ./query-links.txt`
+do
+	LABEL=`echo $LINE | awk -F '|' '{printf("%s",$1)}'`
+	URL=`echo $LINE | awk -F '|' '{printf("%s",$2)}'`
+    	echo "<p><a href='$URL' target='_blank'>$LABEL</a></p>" >> $INDEX_FILE
+done
+
+echo "<table>" >> $INDEX_FILE
 echo "<tr><th>Actividad</th><th>Bugs en Sugarlabs</th><th>Bugs en OLPC</th></tr>" >> $INDEX_FILE
 
 for LINE in `cat ./activities-data.txt`
