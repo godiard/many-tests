@@ -7,7 +7,7 @@ colors|gitorious@git.sugarlabs.org:colors/mainline.git|Colors|colors-activity|
 distance|git://dev.laptop.org/projects/acoustic-measure-activity||acoustic-measure-activity|
 etoys|gitorious@git.sugarlabs.org:etoys/mainline.git|Etoys|etoys-activity|
 finance|gitorious@git.sugarlabs.org:finance/mainline.git|||
-fototoon|gitorious@git.sugarlabs.org:fototoon/mainline.git|||
+fototoon|gitorious@git.sugarlabs.org:fototoon/mainline.git|FotoToon||
 get-books|gitorious@git.sugarlabs.org:get-books/mainline.git|||
 hello-world|gitorious@git.sugarlabs.org:helloworld/mainline.git|||
 help|gitorious@git.sugarlabs.org:help/mainline.git|Help|help-activity|
