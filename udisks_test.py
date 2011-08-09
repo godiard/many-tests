@@ -16,7 +16,7 @@ def get_props_from_device(device):
         props['mount_path'] = device_props.Get('org.freedesktop.UDisks.Device',
                 'DeviceMountPaths')[0]
         props['removable'] = device_props.Get('org.freedesktop.UDisks.Device',
-                'DeviceIsRemovable')
+                'DriveCanDetach')
         props['label'] = str(device_props.Get('org.freedesktop.UDisks.Device',
                 'IdLabel'))
         return props        
@@ -26,7 +26,7 @@ def device_changed_callback(device):
     print 'Device %s was changed' % (device)
     props = get_props_from_device(device)
     if props is not None:
-        print 'Device was mounted in %s label %s' % (props['mount_path'], props['label'])
+        print 'Device was mounted in %s label %s' % (props['mount_path'], props)
         devices[device] = props
     else:
         if device in devices:
@@ -50,7 +50,7 @@ devices = {}
 for device in proxy.EnumerateDevices():
     props = get_props_from_device(device)
     if props is not None:
-        print 'Device mounted in %s' % props['mount_path']
+        print 'Device props %s' % props
         devices[device] = props
 
 
