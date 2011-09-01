@@ -5,10 +5,9 @@ import pango
 def main():
     win = gtk.Window()
     win.connect('destroy', gtk.main_quit)
-    win.set_default_size(850, 550)
-
+    win.maximize()
     scroll = gtk.ScrolledWindow()
-    scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+    scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
     viewport = gtk.Viewport()
     vbox = gtk.VBox()
     fonts = []
