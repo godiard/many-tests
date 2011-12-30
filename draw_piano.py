@@ -1,17 +1,25 @@
 #!/usr/bin/env python
 
+import gobject
 import gtk
 import cairo
 
 
 class PianoKeyboard(gtk.DrawingArea):
 
+    __gsignals__ = {'key_clicked': (gobject.SIGNAL_RUN_FIRST,
+                          gobject.TYPE_NONE,
+                          ([gobject.TYPE_INT, gobject.TYPE_INT,
+                            gobject.TYPE_STRING]))}
+
     def __init__(self, octaves=1, add_c=False, labels=None):
         self._octaves = octaves
         self._add_c = add_c
         self._labels = labels
         super(PianoKeyboard, self).__init__()
-        self.connect("expose_event", self.expose)
+        self.connect('expose_event', self.expose)
+        self.connect('button_press_event', self.__button_press_cb)
+        self.set_events(gtk.gdk.EXPOSURE_MASK | gtk.gdk.BUTTON_PRESS_MASK)
 
     def calculate_sizes(self, width):
         self._width = width
@@ -21,6 +29,41 @@ class PianoKeyboard(gtk.DrawingArea):
             cant_keys += 1
         self._key_width = self._width / cant_keys
         self._black_keys_height = self._height * 2 / 3
+        self._octave_width = self._key_width * 7
+
+    def __button_press_cb(self, widget, event):
+        if event.button == 1:
+            x, y = event.x, event.y
+            if y > self._height:
+                return True
+            octave_clicked = int(x / self._octave_width)
+            key_area = int((x % self._octave_width) / self._key_width)
+            click_x = int(x % self._key_width)
+            white_keys = [0, 2, 4, 5, 7, 9, 11]
+            l_keys_areas = [0, 3]
+            t_keys_areas = [1, 4, 5]
+            j_keys_areas = [2, 6]
+            if y > self._black_keys_height or \
+                (self._add_c and x > self._width - self._key_width):
+                key_clicked = white_keys[key_area]
+            else:
+                # check black key at the right
+                key_clicked = -1
+                if key_area in l_keys_areas or \
+                    key_area in t_keys_areas:
+                    if click_x > self._key_width * 2 / 3:
+                        key_clicked = white_keys[key_area] + 1
+                # check black key at the left
+                if key_clicked == -1 and \
+                    key_area in j_keys_areas or \
+                    key_area in t_keys_areas:
+                    if click_x < self._key_width * 1 / 3:
+                        key_clicked = white_keys[key_area] - 1
+                if key_clicked == -1:
+                    key_clicked = white_keys[key_area]
+            self.emit('key_clicked', octave_clicked, key_clicked,
+                    self._labels[octave_clicked][key_clicked])
+            return True
 
     def expose(self, widget, event):
         rect = self.get_allocation()
@@ -29,12 +72,14 @@ class PianoKeyboard(gtk.DrawingArea):
         ctx = widget.window.cairo_create()
 
         # set a clip region for the expose event
-        ctx.rectangle(event.area.x, event.area.y,
-                               event.area.width, event.area.height)
+        ctx.rectangle(event.area.x, event.area.y, event.area.width,
+                event.area.height)
         ctx.clip()
+
+        # calculate text height
         ctx.select_font_face("Sans", cairo.FONT_SLANT_NORMAL,
                 cairo.FONT_WEIGHT_NORMAL)
-        # TODO: configure or calculate 
+        # TODO: configure or calculate
         ctx.set_font_size(20)
         x_bearing, y_bearing, width, height, x_advance, y_advance = \
                 ctx.text_extents('M')
@@ -241,10 +286,17 @@ class PianoKeyboard(gtk.DrawingArea):
             ctx.show_text(text)
 
 
+def print_key_clicked(widget, octave_clicked, key_clicked, letter):
+    print 'Octave: %d Key: %d Letter: %s' % (octave_clicked, key_clicked,
+        letter)
+
+
 def main():
     window = gtk.Window()
     labels_tamtam = ['Q2W3ER5T6Y7UI', 'ZSXDCVGBHNJM', ',']
     piano = PianoKeyboard(octaves=2, add_c=True, labels=labels_tamtam)
+    piano.connect('key_clicked', print_key_clicked)
+
     window.add(piano)
     window.connect("destroy", gtk.main_quit)
     window.show_all()
