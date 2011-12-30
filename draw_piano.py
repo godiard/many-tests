@@ -7,7 +7,11 @@ import cairo
 
 class PianoKeyboard(gtk.DrawingArea):
 
-    __gsignals__ = {'key_clicked': (gobject.SIGNAL_RUN_FIRST,
+    __gsignals__ = {'key_pressed': (gobject.SIGNAL_RUN_FIRST,
+                          gobject.TYPE_NONE,
+                          ([gobject.TYPE_INT, gobject.TYPE_INT,
+                            gobject.TYPE_STRING])),
+                    'key_released': (gobject.SIGNAL_RUN_FIRST,
                           gobject.TYPE_NONE,
                           ([gobject.TYPE_INT, gobject.TYPE_INT,
                             gobject.TYPE_STRING]))}
@@ -65,13 +69,14 @@ class PianoKeyboard(gtk.DrawingArea):
                 if key_clicked == -1:
                     key_clicked = white_keys[key_area]
             self._pressed_key = (octave_clicked, key_clicked)
-            self.emit('key_clicked', octave_clicked, key_clicked,
+            self.emit('key_pressed', octave_clicked, key_clicked,
                     self._labels[octave_clicked][key_clicked])
             self.queue_draw()
             return True
 
     def __button_release_cb(self, widget, event):
         self._pressed_key = None
+        self.emit('key_released', -1, -1, '')
         self.queue_draw()
 
     def expose(self, widget, event):
@@ -334,16 +339,20 @@ class PianoKeyboard(gtk.DrawingArea):
             ctx.show_text(text)
 
 
-def print_key_clicked(widget, octave_clicked, key_clicked, letter):
-    print 'Octave: %d Key: %d Letter: %s' % (octave_clicked, key_clicked,
-        letter)
+def print_key_pressed(widget, octave_clicked, key_clicked, letter):
+    print 'Pressed Octave: %d Key: %d Letter: %s' % (octave_clicked,
+        key_clicked, letter)
 
+def print_key_released(widget, octave_clicked, key_clicked, letter):
+    print 'Released Octave: %d Key: %d Letter: %s' % (octave_clicked,
+        key_clicked, letter)
 
 def main():
     window = gtk.Window()
     labels_tamtam = ['Q2W3ER5T6Y7UI', 'ZSXDCVGBHNJM', ',']
     piano = PianoKeyboard(octaves=2, add_c=True, labels=labels_tamtam)
-    piano.connect('key_clicked', print_key_clicked)
+    piano.connect('key_pressed', print_key_pressed)
+    piano.connect('key_released', print_key_released)
 
     window.add(piano)
     window.connect("destroy", gtk.main_quit)
