@@ -1,4 +1,13 @@
 #!/usr/bin/env python
+# Copyright (C) 2011, One Laptop Per Child
+# Author, Gonzalo Odiard
+# License: LGPLv2
+#
+# The class PianoKeyboard draw a keybord and interact with the mouse
+# References
+# http://www.josef-k.net/mim/MusicSystem.html
+# http://wiki.laptop.org/images/4/4e/Tamtamhelp2.png
+#
 
 import gobject
 import gtk
@@ -343,9 +352,11 @@ def print_key_pressed(widget, octave_clicked, key_clicked, letter):
     print 'Pressed Octave: %d Key: %d Letter: %s' % (octave_clicked,
         key_clicked, letter)
 
+
 def print_key_released(widget, octave_clicked, key_clicked, letter):
     print 'Released Octave: %d Key: %d Letter: %s' % (octave_clicked,
         key_clicked, letter)
+
 
 def main():
     window = gtk.Window()
