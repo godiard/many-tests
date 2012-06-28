@@ -49,6 +49,7 @@ def main():
     window.add(test_touch)
     window.connect("destroy", Gtk.main_quit)
     window.show_all()
+    window.maximize()
     Gtk.main()
 
 if __name__ == "__main__":
