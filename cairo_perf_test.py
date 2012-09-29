@@ -21,7 +21,7 @@ png_test_file = '/usr/share/icons/gnome/256x256/emotes/face-cool.png'
 
 class CairoTest(Gtk.DrawingArea):
 
-    tests = ['box', 'circle', 'text', 'bitmap', 'bitmap_ops']
+    tests = ['box', 'circle', 'text', 'bitmap', 'bitmap_ops', 'gradient']
 
     def __init__(self):
         self._test_number = 0
@@ -75,7 +75,14 @@ class CairoTest(Gtk.DrawingArea):
                 ctx.set_source_surface(self._im_surface)
                 ctx.paint()
                 ctx.restore()
-
+            if self._test == 'gradient':
+                ctx.rectangle(x, y, width, width)
+                pat = cairo.LinearGradient (x, y, x+ width, y + width)
+                r, g, b, a = colors[random.randint(0, 5)]
+                pat.add_color_stop_rgba (0, r, g, b, a)
+                r, g, b, a = colors[random.randint(0, 5)]
+                pat.add_color_stop_rgba (1, r, g, b, a)
+                ctx.set_source(pat)
             ctx.fill()
         logging.error("Time test %s = %f s.", self._test,
                 (time.time() - timeini))
