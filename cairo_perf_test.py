@@ -127,7 +127,7 @@ class CairoTest(Gtk.DrawingArea):
         for test in CairoTest.tests:
             if test in self._results:
                 values = self._results[test]
-                logging.error('%s average = %f, max = %f, min = %f',
+                logging.error('%-20s average = %f, max = %f, min = %f',
                     test, sum(values) / len(values), max(values), min(values))
 
     def _change_test(self):
