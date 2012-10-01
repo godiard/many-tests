@@ -14,21 +14,27 @@ class TestTouch(Gtk.DrawingArea):
         self.touches = {}
         super(TestTouch, self).__init__()
         self.set_events(Gdk.EventMask.TOUCH_MASK)
+        self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
+        self.add_events(Gdk.EventMask.BUTTON_RELEASE_MASK)
+        self.add_events(Gdk.EventMask.BUTTON_MOTION_MASK)
         self.connect('draw', self.__draw_cb)
         self.connect('event', self.__event_cb)
 
     def __event_cb(self, widget, event):
         if event.type in (Gdk.EventType.TOUCH_BEGIN,
                 Gdk.EventType.TOUCH_CANCEL, Gdk.EventType.TOUCH_END,
-                Gdk.EventType.TOUCH_UPDATE):
-            x = event.touch.x
-            y = event.touch.y
+                Gdk.EventType.TOUCH_UPDATE, Gdk.EventType.BUTTON_PRESS,
+                Gdk.EventType.BUTTON_RELEASE, Gdk.EventType.MOTION_NOTIFY):
+            x = event.get_coords()[1]
+            y = event.get_coords()[2]
             seq = str(event.touch.sequence)
 
             if event.type in (Gdk.EventType.TOUCH_BEGIN,
-                    Gdk.EventType.TOUCH_UPDATE):
+                    Gdk.EventType.TOUCH_UPDATE, Gdk.EventType.BUTTON_PRESS,
+                    Gdk.EventType.MOTION_NOTIFY):
                 self.touches[seq] = (x, y)
-            elif event.type == Gdk.EventType.TOUCH_END:
+            elif event.type in (Gdk.EventType.TOUCH_END,
+                                Gdk.EventType.BUTTON_RELEASE):
                 del self.touches[seq]
             self.queue_draw()
 
