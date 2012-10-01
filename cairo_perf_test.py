@@ -26,7 +26,8 @@ POWERD_INHIBIT_DIR = '/var/run/powerd-inhibit-suspend'
 
 class CairoTest(Gtk.DrawingArea):
 
-    tests = ['box', 'circle', 'text', 'bitmap', 'bitmap_ops', 'gradient']
+    tests = ['box', 'circle', 'text', 'bitmap', 'bitmap_ops', 'gradient', \
+            'bitmap_sim', 'bitmap_ops_sim']
 
     def __init__(self, repeat=1):
         self._test_number = 0
@@ -35,6 +36,7 @@ class CairoTest(Gtk.DrawingArea):
         self._count = 1
         self._results = {}
         self._im_surface = cairo.ImageSurface.create_from_png(png_test_file)
+        self._im_surface_similar = None
         self._im_width = self._im_surface.get_width()
         super(CairoTest, self).__init__()
 
@@ -67,6 +69,13 @@ class CairoTest(Gtk.DrawingArea):
         self.connect('map', map_cb)
 
     def __draw_cb(self, widget, ctx):
+        if self._im_surface_similar == None:
+            self._im_surface_similar = ctx.get_target().create_similar(
+                    cairo.CONTENT_COLOR_ALPHA, self._im_width, self._im_width)
+            ctx_similar = cairo.Context(self._im_surface_similar)
+            ctx_similar.set_source_surface(self._im_surface)
+            ctx_similar.paint()
+
         timeini = time.time()
         for n in range(cant_objects):
             ctx.set_source_rgba(*colors[self._random_color_a[n]])
@@ -111,6 +120,22 @@ class CairoTest(Gtk.DrawingArea):
                 r, g, b, a = colors[self._random_color_b[n]]
                 pat.add_color_stop_rgba(1, r, g, b, a)
                 ctx.set_source(pat)
+            if self._test == 'bitmap_sim':
+                ctx.save()
+                ctx.translate(x, y)
+                ctx.set_source_surface(self._im_surface_similar)
+                ctx.paint()
+                ctx.restore()
+            if self._test == 'bitmap_ops_sim':
+                ctx.save()
+                ctx.translate(x, y)
+                scale = width / float(self._im_width)
+                angle = self._random_angle[n]
+                ctx.scale(scale, scale)
+                ctx.rotate(angle)
+                ctx.set_source_surface(self._im_surface_similar)
+                ctx.paint()
+                ctx.restore()
             ctx.fill()
         #logging.error("Time test %s = %f s.", self._test,
         #        (time.time() - timeini))

@@ -1,3 +1,4 @@
 New&nbsp;toolbars|http://dev.laptop.org/query?status=assigned&status=new&status=reopened&summary=~has+old+toolbar&col=id&col=summary&col=status&col=type&col=priority&col=milestone&col=component&order=priority
 11.3|http://dev.laptop.org/query?status=assigned&status=new&status=reopened&group=next_action&max=1000&order=priority&col=id&col=summary&col=owner&col=priority&col=component&milestone=11.3.0&report=43
 11.3-sugarlabs|http://bugs.sugarlabs.org/query?status=accepted&status=assigned&status=new&status=reopened&order=priority&col=id&col=summary&col=keywords&col=status&col=type&col=priority&col=milestone&col=component&keywords=~11.3
+EasyHacks|http://bugs.sugarlabs.org/query?status=accepted&status=assigned&status=new&status=reopened&group=component&order=priority&col=id&col=summary&col=status&col=owner&col=type&col=priority&col=milestone&keywords=~easy-hack
