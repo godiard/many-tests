@@ -19,13 +19,17 @@ colors = [(1.0, 0.0, 0.0, 1.0), (0.0, 1.0, 0.0, 1.0), (0.0, 0.0, 1.0, 1.0),
 test_text = 'Hello World!'
 png_test_file = '/usr/share/icons/gnome/256x256/emotes/face-cool.png'
 
+
 class CairoTest(Gtk.DrawingArea):
 
     tests = ['box', 'circle', 'text', 'bitmap', 'bitmap_ops', 'gradient']
 
-    def __init__(self):
+    def __init__(self, repeat=1):
         self._test_number = 0
         self._test = CairoTest.tests[self._test_number]
+        self._repeat = repeat
+        self._count = 1
+        self._results = {}
         self._im_surface = cairo.ImageSurface.create_from_png(png_test_file)
         self._im_width = self._im_surface.get_width()
         super(CairoTest, self).__init__()
@@ -77,15 +81,29 @@ class CairoTest(Gtk.DrawingArea):
                 ctx.restore()
             if self._test == 'gradient':
                 ctx.rectangle(x, y, width, width)
-                pat = cairo.LinearGradient (x, y, x+ width, y + width)
+                pat = cairo.LinearGradient(x, y, x + width, y + width)
                 r, g, b, a = colors[random.randint(0, 5)]
-                pat.add_color_stop_rgba (0, r, g, b, a)
+                pat.add_color_stop_rgba(0, r, g, b, a)
                 r, g, b, a = colors[random.randint(0, 5)]
-                pat.add_color_stop_rgba (1, r, g, b, a)
+                pat.add_color_stop_rgba(1, r, g, b, a)
                 ctx.set_source(pat)
             ctx.fill()
-        logging.error("Time test %s = %f s.", self._test,
-                (time.time() - timeini))
+        #logging.error("Time test %s = %f s.", self._test,
+        #        (time.time() - timeini))
+        self._add_result(self._test, (time.time() - timeini))
+
+    def _add_result(self, test, time):
+        if not test in self._results:
+            self._results[test] = []
+        self._results[test].append(time)
+
+    def _print_results(self):
+        logging.error('RESULTS: %s', self._results)
+        logging.error('REPEAT %d TIMES', self._repeat)
+        for test in CairoTest.tests:
+            values = self._results[test]
+            logging.error('%s average = %f, max = %f, min = %f',
+                    test, sum(values) / len(values), max(values), min(values))
 
     def _change_test(self):
         if self._test_number < len(CairoTest.tests) - 1:
@@ -93,13 +111,20 @@ class CairoTest(Gtk.DrawingArea):
             self._test = CairoTest.tests[self._test_number]
             self.queue_draw()
         else:
-            Gtk.main_quit()
+            if self._count < self._repeat:
+                self._count += 1
+                self._test_number = 0
+                self._test = CairoTest.tests[self._test_number]
+                self.queue_draw()
+            else:
+                self._print_results()
+                Gtk.main_quit()
         return True
 
 
 if __name__ == "__main__":
     window = Gtk.Window()
-    cairo_test = CairoTest()
+    cairo_test = CairoTest(10)
     window.add(cairo_test)
     window.connect("destroy", Gtk.main_quit)
     window.maximize()
