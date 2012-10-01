@@ -11,6 +11,7 @@ import cairo
 import math
 import random
 import time
+import os
 import logging
 
 colors = [(1.0, 0.0, 0.0, 1.0), (0.0, 1.0, 0.0, 1.0), (0.0, 0.0, 1.0, 1.0),
@@ -19,6 +20,8 @@ colors = [(1.0, 0.0, 0.0, 1.0), (0.0, 1.0, 0.0, 1.0), (0.0, 0.0, 1.0, 1.0),
 test_text = 'Hello World!'
 png_test_file = '/usr/share/icons/gnome/256x256/emotes/face-cool.png'
 cant_objects = 100
+
+POWERD_INHIBIT_DIR = '/var/run/powerd-inhibit-suspend'
 
 
 class CairoTest(Gtk.DrawingArea):
@@ -53,6 +56,7 @@ class CairoTest(Gtk.DrawingArea):
             self._random_font_size.append(random.randint(12, 40))
             self._random_angle.append(2 * math.pi * random.random())
 
+        self._inhibit_suspend()
         self.connect('draw', self.__draw_cb)
         GObject.timeout_add(1000, self._change_test)
 
@@ -119,10 +123,11 @@ class CairoTest(Gtk.DrawingArea):
 
     def _print_results(self):
         logging.error('RESULTS: %s', self._results)
-        logging.error('REPEAT %d TIMES', self._repeat)
+        logging.error('REPEAT %d TIMES', self._count)
         for test in CairoTest.tests:
-            values = self._results[test]
-            logging.error('%s average = %f, max = %f, min = %f',
+            if test in self._results:
+                values = self._results[test]
+                logging.error('%s average = %f, max = %f, min = %f',
                     test, sum(values) / len(values), max(values), min(values))
 
     def _change_test(self):
@@ -137,16 +142,41 @@ class CairoTest(Gtk.DrawingArea):
                 self._test = CairoTest.tests[self._test_number]
                 self.queue_draw()
             else:
-                self._print_results()
-                Gtk.main_quit()
+                self.quit(None)
         return True
+
+    def quit(self, widget):
+        self._print_results()
+        self._inhibit_suspend()
+        Gtk.main_quit()
+
+    def powerd_running(self):
+        using_powerd = os.access(POWERD_INHIBIT_DIR, os.W_OK)
+        logging.error("using_powerd: %d", using_powerd)
+        return using_powerd
+
+    def _inhibit_suspend(self):
+        if self.powerd_running():
+            fd = open(POWERD_INHIBIT_DIR + "/%u" % os.getpid(), 'w')
+            logging.error("inhibit_suspend file is %s", (POWERD_INHIBIT_DIR \
+                    + "/%u" % os.getpid()))
+            fd.close()
+            return True
+
+    def _allow_suspend(self):
+        if self.powerd_running():
+            if os.path.exists(POWERD_INHIBIT_DIR + "/%u" % os.getpid()):
+                os.unlink(POWERD_INHIBIT_DIR + "/%u" % os.getpid())
+            logging.error("allow_suspend unlinking %s", (POWERD_INHIBIT_DIR \
+                    + "/%u" % os.getpid()))
+            return True
 
 
 if __name__ == "__main__":
     window = Gtk.Window()
     cairo_test = CairoTest(10)
     window.add(cairo_test)
-    window.connect("destroy", Gtk.main_quit)
+    window.connect("destroy", cairo_test.quit)
     window.maximize()
     window.show_all()
     Gtk.main()
