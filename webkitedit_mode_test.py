@@ -7,10 +7,10 @@ def _destroy_cb(widget):
     Gtk.main_quit()
 
 def toggle_highlight(button, webview):
-    webview.set_editable(True)
+    #webview.set_editable(True)
     webview.execute_script(
       'document.execCommand("backColor", false, "yellow");')
-    webview.set_editable(False)
+    #webview.set_editable(False)
 
 local_path = os.path.dirname(os.path.realpath(__file__))
 window = Gtk.Window()
