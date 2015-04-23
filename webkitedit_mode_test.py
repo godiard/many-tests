@@ -75,9 +75,35 @@ class WebKitHighlighter(Gtk.Window):
         return False
 
     def __toggle_highlight_cb(self, button):
+        logging.error('active %s', button.get_active())
         self._webview.set_editable(True)
-        self._webview.execute_script(
-            'document.execCommand("backColor", false, "yellow");')
+
+        if button.get_active():
+            self._webview.execute_script(
+                'document.execCommand("backColor", false, "yellow");')
+        else:
+            # need remove the highlight nodes
+            js = """
+                var selObj = window.getSelection();
+                var range  = selObj.getRangeAt(0);
+                var node = range.startContainer;
+                while (node.parentNode != null) {
+                  if (node.localName == "span") {
+                    if (node.hasAttributes()) {
+                      var attrs = node.attributes;
+                      for(var i = attrs.length - 1; i >= 0; i--) {
+                        if (attrs[i].name == "style" &&
+                            attrs[i].value == "background-color: yellow;") {
+                          node.removeAttribute("style");
+                          break;
+                        };
+                      };
+                    };
+                  };
+                  node = node.parentNode;
+                };"""
+            self._webview.execute_script(js)
+
         self._webview.set_editable(False)
 
     def _save(self):
