@@ -20,9 +20,10 @@ class WebKitHighlighter(Gtk.Window):
         self._selection_change_timer = None
 
         vbox = Gtk.VBox()
-        highlight_bt = Gtk.ToggleButton('Highlight')
-        highlight_bt.connect('toggled', self.__toggle_highlight_cb)
-        vbox.pack_start(highlight_bt, False, False, 10)
+        self._highlight_bt = Gtk.ToggleButton('Highlight')
+        self._toggled_id = self._highlight_bt.connect(
+            'toggled', self.__toggle_highlight_cb)
+        vbox.pack_start(self._highlight_bt, False, False, 10)
 
         self._webview.load_uri('file://%s/%s' % (local_path, test_html_path))
         self._webview.connect('selection-changed', self.__selection_changed_cb)
@@ -68,6 +69,9 @@ class WebKitHighlighter(Gtk.Window):
         on_highlight = self._webview.get_title() == 'true'
         self._webview.execute_script('document.title = "%s";' % page_title)
         logging.error('SELECTION CHANGED %s', on_highlight)
+        self._highlight_bt.handler_block(self._toggled_id)
+        self._highlight_bt.set_active(on_highlight)
+        self._highlight_bt.handler_unblock(self._toggled_id)
         return False
 
     def __toggle_highlight_cb(self, button):
